@@ -1,0 +1,39 @@
+diff --git a/requirements/system/ubuntu/apt-packages.txt b/requirements/system/ubuntu/apt-packages.txt
+index 1cf5e09..9035b0a 100644
+--- a/requirements/system/ubuntu/apt-packages.txt
++++ b/requirements/system/ubuntu/apt-packages.txt
+@@ -1,13 +1,9 @@
+-python-software-properties
+ pkg-config
+ gfortran
+ libatlas-dev
+ libblas-dev
+ liblapack-dev
+ liblapack3gf
+-curl
+-git
+-python-virtualenv
+ python-scipy
+ python-numpy
+ build-essential
+@@ -20,20 +16,16 @@ libtiff4-dev
+ zlib1g-dev
+ libxml2-dev
+ libxslt-dev
+-yui-compressor
+ graphviz
+ libgraphviz-dev
+ graphviz-dev
+-mysql-server
+ libmysqlclient-dev
+ libgeos-dev
+ libreadline6
+ libreadline6-dev
+-mongodb
+ nodejs
+ coffeescript
+ mysql-client
+-virtualenvwrapper
+ libgeos-ruby1.8
+ lynx-cur
+ libxmlsec1-dev

@@ -1,0 +1,43 @@
+mysql:
+  image: mysql:5.5
+  environment:
+    MYSQL_ROOT_PASSWORD: "password"
+  volumes:
+   - "./docker-vols/mysql:/var/lib/mysql"
+   - "./docker-vols/tmp/cache:/tmp/cache"
+
+
+memcached:
+  image: memcached:1.4
+
+mongo:
+  image: mongo:2.4
+
+lms:
+  build: edxapp
+  command: paver lms --settings=docker
+  volumes:
+   - "/edx/edxapp/edx-platform:/edx/edxapp/edx-platform"
+  links:
+   - mysql
+   - mongo
+   - memcached
+
+studio:
+  build: edxapp
+  command: paver studio --settings=docker
+  volumes:
+   - "/edx/edxapp/edx-platform:/edx/edxapp/edx-platform"
+  links:
+   - mysql
+   - mongo
+   - memcached
+
+nginx:
+  build: nginx
+  privileged: true
+  ports:
+    - "80:80"
+  links:
+    - lms
+    - studio
