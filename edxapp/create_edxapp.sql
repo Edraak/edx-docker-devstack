@@ -3,4 +3,4 @@
 
 -- This one creates a latin1 database that works but not sure if it is good.
 -- However, it looks like edX uses this
-CREATE DATABASE edxapp;
+CREATE DATABASE IF NOT EXISTS edxapp;

@@ -3,9 +3,8 @@ mysql:
   environment:
     MYSQL_ROOT_PASSWORD: "password"
   volumes:
-   - "./docker-vols/mysql:/var/lib/mysql"
-   - "./docker-vols/tmp/cache:/tmp/cache"
-
+   - "./docker-vols/mysql_lib:/var/lib/mysql"
+   - "./docker-vols/mysql_tmp_cache:/tmp/cache"
 
 memcached:
   image: memcached:1.4
@@ -15,29 +14,48 @@ mongo:
 
 lms:
   build: edxapp
-  command: paver lms --settings=docker
+  environment:
+    PYTHONPATH: "/edx/app/edxapp/src/"
+  command: bash -c 'paver lms --settings=docker'
   volumes:
-   - "/edx/edxapp/edx-platform:/edx/edxapp/edx-platform"
+   - "/edx/app/edxapp/edx-platform:/edx/app/edxapp/edx-platform"
+
+   - "./docker-vols/lms_edx_app_edxapp_edx_platform_src:/edx/app/edxapp/edx-platform/src/"
+   - "./docker-vols/lms_edx_app_edxapp_staticfiles:/edx/app/edxapp/staticfiles/"
+
+   - "./docker-vols/lms_edx_app_edxapp_log:/edx/app/edxapp/log"
+   - "./docker-vols/lms_edx_var_edxapp_data:/edx/var/edxapp/data"
+   - "./docker-vols/lms_edx_app_edxapp_uploads:/edx/app/edxapp/uploads"
+
+   - "./edxapp/lms_docker_env.py:/edx/app/edxapp/edx-platform/lms/envs/docker.py"
+   - "./edxapp/cms_docker_env.py:/edx/app/edxapp/edx-platform/cms/envs/docker.py"
+   - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/lms/envs/docker_common.py"
+   - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/cms/envs/docker_common.py"
+
   links:
    - mysql
    - mongo
    - memcached
 
-studio:
-  build: edxapp
-  command: paver studio --settings=docker
-  volumes:
-   - "/edx/edxapp/edx-platform:/edx/edxapp/edx-platform"
-  links:
-   - mysql
-   - mongo
-   - memcached
+# studio:
+#   build: edxapp
+#   command: paver studio --settings=docker
+#   # volumes:
+#   #  - "/edx/app/edxapp/edx-platform:/edx/app/edxapp/edx-platform"
+#   #  - "./edxapp/lms_docker_env.py:/edx/app/edxapp/edx-platform/lms/envs/docker.py"
+#   #  - "./edxapp/cms_docker_env.py:/edx/app/edxapp/edx-platform/cms/envs/docker.py"
+#   #  - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/lms/envs/docker_common.py"
+#   #  - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/cms/envs/docker_common.py"
+#   links:
+#    - mysql
+#    - mongo
+#    - memcached
 
 nginx:
   build: nginx
-  privileged: true
   ports:
     - "80:80"
   links:
     - lms
-    - studio
+    # - studio
+    # - "lms:studio"  # Faking studio

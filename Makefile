@@ -1,9 +1,11 @@
+# TODO: Checkout the edX platform
+
 all: build_stuff
 	# The default step, build without run.
 	echo Now you can run the stack using $ docker-compose up
 
 
-build_stuff: build_images initialize_mysql_db
+build_stuff: build_images lms_install_github_prereqs db_initialize_mysql
 	# Build the images.
 	echo Done buidling images and database
 
@@ -47,8 +49,12 @@ build_images:
 	docker-compose build
 
 
-initialize_mysql_db:
+lms_install_github_prereqs:
+	# Installs the github requirements in the `edx-platform/src/` dir.
 
+	docker-compose run lms pip install --exists-action w -r requirements/edx/github.txt
+
+db_initialize_mysql:
 	# Build the database from scratch: create database and migrate it.
 
 	# Waiting mysql to launch (Quit using Ctrl-C this if it takes more than 1 minute)...
@@ -63,7 +69,7 @@ initialize_mysql_db:
 
 	# Creating database edxapp...
 	# TODO Check if this is not consistnent with edX
-	docker-compose run lms mysql --host mysql --default-character-set=utf8 -u root -ppassword < create_edxapp.sql
+	docker-compose run lms mysql --host mysql --default-character-set=utf8 -u root -ppassword < edxapp/create_edxapp.sql
 
 	# Splitting this into three steps to avoid a bug in `0002_remove_article_subscription`
 	# Migrating...
@@ -71,3 +77,5 @@ initialize_mysql_db:
 	docker-compose run lms python manage.py lms migrate wiki 0002_remove_article_subscription --fake --settings=docker
 	docker-compose run lms python manage.py lms migrate --settings=docker
 	docker-compose run lms python manage.py cms migrate --settings=docker
+
+	docker-compose run lms mysql --host mysql --default-character-set=utf8 -u root -ppassword edxapp < edxapp/add_edxapp_users.sql
