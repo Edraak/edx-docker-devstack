@@ -11,6 +11,8 @@ memcached:
 
 mongo:
   image: mongo:2.4
+  volumes:
+    - "./docker-vols/mongo_data_db:/data/db"
 
 lms:
   build: edxapp
