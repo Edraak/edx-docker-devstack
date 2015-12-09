@@ -35,6 +35,7 @@ RUN cat requirements/system/ubuntu/apt-packages.txt | xargs apt-get install -y
 RUN apt-get install python-pip -y
 
 # TODO: Use both `pip` and `git` cahce to speed installs
+# TODO: Avoid this step and run it and `make` time
 RUN for pckg in pre base post paver development github local; \
       do pip install --exists-action w -r requirements/edx/$pckg.txt; \
     done
@@ -66,5 +67,10 @@ ADD docker_common.py lms/envs/
 ADD docker_common.py cms/envs/
 
 RUN paver install_prereqs
+
+# TODO: Change the `apt-packages.gitpatch` instead of having this step
+RUN apt-get -y install yui-compressor
+
+RUN mkdir /edx/app/edxapp/staticfiles/
 
 EXPOSE 8000 8001
