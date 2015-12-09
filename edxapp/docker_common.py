@@ -7,6 +7,10 @@ META_UNIVERSITIES = {}
 
 PIPELINE_ENABLED = False
 
+
+SESSION_COOKIE_DOMAIN = '.local.edx.org'
+CSRF_COOKIE_DOMAIN = '.local.edx.org'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -16,6 +20,8 @@ DATABASES = {
         'USER': 'root'
     }
 }
+
+
 
 CONTENTSTORE = {
     'ADDITIONAL_OPTIONS': {},

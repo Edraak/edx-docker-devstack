@@ -16,7 +16,11 @@ lms:
   build: edxapp
   environment:
     PYTHONPATH: "/edx/app/edxapp/src/"
-  command: bash -c 'paver lms --settings=docker'
+    DJANGO_SETTINGS_MODULE: lms.envs.docker
+
+  # command: paver lms
+  command: python manage.py lms runserver 0.0.0.0:8000
+
   volumes:
    - "/edx/app/edxapp/edx-platform:/edx/app/edxapp/edx-platform"
 
@@ -37,19 +41,22 @@ lms:
    - mongo
    - memcached
 
-# studio:
-#   build: edxapp
-#   command: paver studio --settings=docker
-#   # volumes:
-#   #  - "/edx/app/edxapp/edx-platform:/edx/app/edxapp/edx-platform"
-#   #  - "./edxapp/lms_docker_env.py:/edx/app/edxapp/edx-platform/lms/envs/docker.py"
-#   #  - "./edxapp/cms_docker_env.py:/edx/app/edxapp/edx-platform/cms/envs/docker.py"
-#   #  - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/lms/envs/docker_common.py"
-#   #  - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/cms/envs/docker_common.py"
-#   links:
-#    - mysql
-#    - mongo
-#    - memcached
+studio:
+  build: edxapp
+  environment:
+    PYTHONPATH: "/edx/app/edxapp/src/"
+    DJANGO_SETTINGS_MODULE: cms.envs.docker
+
+  # command: paver studio
+  command: python manage.py cms runserver 0.0.0.0:8001
+
+  volumes_from:
+    - lms:rw
+
+  links:
+   - mysql
+   - mongo
+   - memcached
 
 nginx:
   build: nginx
@@ -57,5 +64,4 @@ nginx:
     - "80:80"
   links:
     - lms
-    # - studio
-    # - "lms:studio"  # Faking studio
+    - studio
