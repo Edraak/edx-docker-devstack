@@ -1,11 +1,7 @@
-#Docker DevStack for the edX Platform
+#Docker DevStack for the edX Platform  [![Build Status](https://travis-ci.org/Edraak/edx-docker-devstack.svg)](https://travis-ci.org/Edraak/edx-docker-devstack)
 
 
-Put edX platform in place; edX platform should be in the directory:
-
-     /edx/app/edxapp/edx-platform
-
-Build the image:
+Build the stack:
 
     $ make
     $ docker-compose up
