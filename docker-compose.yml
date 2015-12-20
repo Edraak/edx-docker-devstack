@@ -2,17 +2,16 @@ mysql:
   image: mysql:5.5
   environment:
     MYSQL_ROOT_PASSWORD: "password"
-  volumes:
-   - "./docker-vols/mysql_lib:/var/lib/mysql"
-   - "./docker-vols/mysql_tmp_cache:/tmp/cache"
+  volumes_from:
+    - "data:rw"
 
 memcached:
   image: memcached:1.4
 
 mongo:
   image: mongo:2.4
-  volumes:
-    - "./docker-vols/mongo_data_db:/data/db"
+  volumes_from:
+    - "data:rw"
 
 lms:
   build: edxapp
@@ -20,23 +19,11 @@ lms:
     PYTHONPATH: "/edx/app/edxapp/src/"
     DJANGO_SETTINGS_MODULE: lms.envs.docker
 
-  # command: paver lms
-  command: python manage.py lms runserver 0.0.0.0:8000
+  command: paver lms
+  # command: python manage.py lms runserver 0.0.0.0:8000
 
-  volumes:
-   - "/edx/app/edxapp/edx-platform:/edx/app/edxapp/edx-platform"
-
-   - "./docker-vols/lms_edx_app_edxapp_edx_platform_src:/edx/app/edxapp/edx-platform/src/"
-   - "./docker-vols/lms_edx_app_edxapp_staticfiles:/edx/app/edxapp/staticfiles/"
-
-   - "./docker-vols/lms_edx_app_edxapp_log:/edx/app/edxapp/log"
-   - "./docker-vols/lms_edx_var_edxapp_data:/edx/var/edxapp/data"
-   - "./docker-vols/lms_edx_app_edxapp_uploads:/edx/app/edxapp/uploads"
-
-   - "./edxapp/lms_docker_env.py:/edx/app/edxapp/edx-platform/lms/envs/docker.py"
-   - "./edxapp/cms_docker_env.py:/edx/app/edxapp/edx-platform/cms/envs/docker.py"
-   - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/lms/envs/docker_common.py"
-   - "./edxapp/docker_common.py:/edx/app/edxapp/edx-platform/cms/envs/docker_common.py"
+  volumes_from:
+    - "data:rw"
 
   links:
    - mysql
@@ -49,16 +36,32 @@ studio:
     PYTHONPATH: "/edx/app/edxapp/src/"
     DJANGO_SETTINGS_MODULE: cms.envs.docker
 
-  # command: paver studio
-  command: python manage.py cms runserver 0.0.0.0:8001
+  command: paver studio
+  # command: python manage.py cms runserver 0.0.0.0:8001
 
   volumes_from:
-    - lms:rw
+    - data:rw
 
   links:
    - mysql
    - mongo
    - memcached
+
+data:
+  image: busybox
+  volumes:
+    # MySQL
+    - /var/lib/mysql
+    - /tmp/cache
+
+    # MongoDB
+    - /data/db
+
+    # edxapp
+    - /edx/app/edxapp/staticfiles/
+    - /edx/app/edxapp/log
+    - /edx/var/edxapp/data
+    - /edx/app/edxapp/uploads
 
 nginx:
   build: nginx

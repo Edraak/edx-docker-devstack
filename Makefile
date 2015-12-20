@@ -5,7 +5,7 @@ all: build_stuff
 	echo Now you can run the stack using $ docker-compose up
 
 
-build_stuff: build_images lms_install_github_prereqs db_initialize_mysql
+build_stuff: build_images db_initialize_mysql
 	# Build the images.
 	echo Done buidling images and database
 
@@ -48,11 +48,6 @@ build_images:
 	# This step will take some time to build the image...
 	docker-compose build
 
-
-lms_install_github_prereqs:
-	# Installs the github requirements in the `edx-platform/src/` dir.
-
-	docker-compose run lms pip install --exists-action w -r requirements/edx/github.txt
 
 db_initialize_mysql:
 	# Build the database from scratch: create database and migrate it.
