@@ -15,12 +15,8 @@ mongo:
 
 lms:
   build: edxapp
-  environment:
-    PYTHONPATH: "/edx/app/edxapp/src/"
-    DJANGO_SETTINGS_MODULE: lms.envs.docker
-
-  command: paver lms
-  # command: python manage.py lms runserver 0.0.0.0:8000
+  command: paver lms --settings=docker
+  # command: python manage.py lms runserver 0.0.0.0:8000 --settings=docker
 
   volumes_from:
     - "data:rw"
@@ -32,12 +28,8 @@ lms:
 
 studio:
   build: edxapp
-  environment:
-    PYTHONPATH: "/edx/app/edxapp/src/"
-    DJANGO_SETTINGS_MODULE: cms.envs.docker
-
-  command: paver studio
-  # command: python manage.py cms runserver 0.0.0.0:8001
+  command: paver studio --settings=docker
+  # command: python manage.py cms runserver 0.0.0.0:8001 --settings=docker
 
   volumes_from:
     - data:rw
