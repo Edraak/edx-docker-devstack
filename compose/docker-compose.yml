@@ -5,39 +5,60 @@ mysql:
   volumes_from:
     - "data:rw"
 
+
 memcached:
   image: memcached:1.4
+
 
 mongo:
   image: mongo:2.4
   volumes_from:
     - "data:rw"
 
+
 lms:
-  build: edxapp
-  command: paver lms --settings=docker
-  # command: python manage.py lms runserver 0.0.0.0:8000 --settings=docker
+  build: build/edxapp
+  working_dir: /edx/app/edxapp/edx-platform
+  expose:
+    - "8000"
+  command: paver lms --settings=devstack
+  # command: python manage.py lms runserver 0.0.0.0:8000 --settings=devstack
 
   volumes_from:
-    - "data:rw"
+    - "syslog:rw"
+
+  volumes:
+    - "../edx-platform/:/edx/app/edxapp/edx-platform-devcode"
+    - "../envs-edx:/edx/app/edxapp/devenvs"
+
+    - "/edx/app/edxapp/staticfiles"
+    - "/edx/app/edxapp/log"
+    - "/edx/var/edxapp/data"
+    - "/edx/app/edxapp/uploads"
+    - "/tmp/edx-s3/grades"
 
   links:
    - mysql
    - mongo
    - memcached
+
 
 studio:
-  build: edxapp
-  command: paver studio --settings=docker
-  # command: python manage.py cms runserver 0.0.0.0:8001 --settings=docker
+  build: build/edxapp
+  working_dir: /edx/app/edxapp/edx-platform
+  expose:
+    - "8001"
+  command: paver studio --settings=devstack
+  # command: python manage.py cms runserver 0.0.0.0:8001 --settings=devstack
 
   volumes_from:
-    - data:rw
+    - "lms:rw"
 
   links:
    - mysql
    - mongo
    - memcached
+
 
 data:
   image: busybox
@@ -49,16 +70,19 @@ data:
     # MongoDB
     - /data/db
 
-    # edxapp
-    - /edx/app/edxapp/staticfiles/
-    - /edx/app/edxapp/log
-    - /edx/var/edxapp/data
-    - /edx/app/edxapp/uploads
 
 nginx:
-  build: nginx
+  build: build/nginx
   ports:
     - "80:80"
   links:
     - lms
     - studio
+
+
+# Provide a syslog just to make the devstack running!
+syslog:
+  image: edx-devstack-syslog
+  volumes:
+    - "/dev/"
+    - "/var/log"

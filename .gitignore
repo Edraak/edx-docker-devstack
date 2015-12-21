@@ -2,3 +2,5 @@
 /.idea/
 tmp*
 /docker-vols/
+/edx-platform/
+
