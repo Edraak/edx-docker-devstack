@@ -4,3 +4,4 @@ tmp*
 /docker-vols/
 /edx-platform/
 
+/envs-edx/
