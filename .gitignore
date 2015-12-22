@@ -1,5 +1,7 @@
 *~
-.idea
+/.idea/
 tmp*
 /docker-vols/
-/mysql/
+/edx-platform/
+
+/envs-edx/

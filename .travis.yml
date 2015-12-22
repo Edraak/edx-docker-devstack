@@ -11,5 +11,4 @@ before_install:
   - pip install docker-compose==1.5.1
 
 script:
-  - make
-  - docker-compose start
+  - cd compose && make

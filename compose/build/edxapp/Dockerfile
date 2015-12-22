@@ -57,19 +57,28 @@ RUN mkdir -p /edx/app/edxapp/log \
     && mkdir -p /edx/app/edxapp/uploads
 
 
-# Keep those at last to have less cache invalidations
-
-# Turn off a warning with Paver!
+# TODO: Remove this, as we don't need them anymore
 ADD env/*.json /edx/app/edxapp/
 
+# TODO: Remove those, as we don't need them anymore
 ADD lms_docker_env.py lms/envs/docker.py
 ADD cms_docker_env.py cms/envs/docker.py
 
+# TODO: Remove those, as we don't need them anymore
 ADD docker_common.py lms/envs/
 ADD docker_common.py cms/envs/
 
 RUN paver install_prereqs
 
-RUN mkdir /edx/app/edxapp/staticfiles/
 
-EXPOSE 8000 8001
+# TODO: Make a link of it, instead of ruining the docker layers by an `$ mv`
+WORKDIR /edx/app/edxapp
+RUN mv edx-platform edx-platform-buildcode
+RUN ln -sd edx-platform-devcode edx-platform
+
+RUN bash -c 'rm {lms,cms}.{env,auth}.json'
+COPY envs/ buildenvs/
+RUN bash -c 'ln -s devenvs/{lms,cms}.{env,auth}.json .'
+
+COPY copy_code.sh copy_code.sh
+RUN chmod +x copy_code.sh
