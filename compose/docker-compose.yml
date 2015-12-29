@@ -19,6 +19,8 @@ mongo:
 lms:
   build: build/edxapp
   working_dir: /edx/app/edxapp/edx-platform
+  environment:
+    EDXAPP_TEST_MONGO_HOST: "mongo"
   expose:
     - "8000"
   command: paver lms --settings=devstack
@@ -46,6 +48,8 @@ lms:
 studio:
   build: build/edxapp
   working_dir: /edx/app/edxapp/edx-platform
+  environment:
+    EDXAPP_TEST_MONGO_HOST: "mongo"
   expose:
     - "8001"
   command: paver studio --settings=devstack
