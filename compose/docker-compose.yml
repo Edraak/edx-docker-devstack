@@ -1,4 +1,5 @@
 mysql:
+  container_name: edx_mysql
   image: mysql:5.5
   environment:
     MYSQL_ROOT_PASSWORD: "password"
@@ -7,16 +8,19 @@ mysql:
 
 
 memcached:
+  container_name: edx_memcached
   image: memcached:1.4
 
 
 mongo:
+  container_name: edx_mongo
   image: mongo:2.4
   volumes_from:
     - "data:rw"
 
 
 lms:
+  container_name: edx_lms
   build: build/edxapp
   working_dir: /edx/app/edxapp/edx-platform
   environment:
@@ -46,6 +50,7 @@ lms:
 
 
 studio:
+  container_name: edx_studio
   build: build/edxapp
   working_dir: /edx/app/edxapp/edx-platform
   environment:
@@ -65,6 +70,7 @@ studio:
 
 
 data:
+  container_name: edx_data
   image: busybox
   volumes:
     # MySQL
@@ -76,6 +82,7 @@ data:
 
 
 nginx:
+  container_name: edx_nginx
   build: build/nginx
   ports:
     - "80:80"
@@ -86,6 +93,7 @@ nginx:
 
 # Provide a syslog just to make the devstack running!
 syslog:
+  container_name: edx_syslog
   image: edx-devstack-syslog
   volumes:
     - "/dev/"
