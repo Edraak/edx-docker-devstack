@@ -3,7 +3,7 @@ all: build
 	echo Now you can run the stack using $ docker-compose up
 
 
-build: build_syslog build_images copy_platform_code db_initialize_mysql
+build: build_syslog build_images copy_platform_code db_reset_mysql
 	# Build the images.
 	echo Done buidling images and database
 
@@ -55,7 +55,7 @@ quick_edxapp_restart:
 	touch ../edx-platform/lms/urls.py ../edx-platform/cms/urls.py
 
 
-db_initialize_mysql:
+db_reset_mysql:
 	# Build the database from scratch: create database and migrate it.
 
 	# Waiting mysql to launch (Quit using Ctrl-C this if it takes more than 1 minute)...
