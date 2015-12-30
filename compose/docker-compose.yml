@@ -27,8 +27,8 @@ lms:
     EDXAPP_TEST_MONGO_HOST: "mongo"
   expose:
     - "8000"
-  command: paver lms --settings=devstack
-  # command: python manage.py lms runserver 0.0.0.0:8000 --settings=devstack
+  # command: paver lms --settings=devstack
+  command: python manage.py lms runserver 0.0.0.0:8000 --settings=devstack
 
   volumes_from:
     - "syslog:rw"
@@ -42,6 +42,7 @@ lms:
     - "/edx/var/edxapp/data"
     - "/edx/app/edxapp/uploads"
     - "/tmp/edx-s3/grades"
+    - "/dev/log:/dev/log"
 
   links:
    - mysql
@@ -57,8 +58,8 @@ studio:
     EDXAPP_TEST_MONGO_HOST: "mongo"
   expose:
     - "8001"
-  command: paver studio --settings=devstack
-  # command: python manage.py cms runserver 0.0.0.0:8001 --settings=devstack
+  # command: paver studio --settings=devstack
+  command: python manage.py cms runserver 0.0.0.0:8001 --settings=devstack
 
   volumes_from:
     - "lms:rw"

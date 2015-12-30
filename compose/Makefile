@@ -74,9 +74,9 @@ db_reset_mysql:
 
 	# Splitting this into three steps to avoid a bug in `0002_remove_article_subscription`
 	# Migrating...
-	docker-compose run lms python manage.py lms migrate wiki 0001_initial --settings=docker
-	docker-compose run lms python manage.py lms migrate wiki 0002_remove_article_subscription --fake --settings=docker
-	docker-compose run lms python manage.py lms migrate --settings=docker
-	docker-compose run lms python manage.py cms migrate --settings=docker
+	docker-compose run lms python manage.py lms migrate wiki 0001_initial --settings=devstack
+	docker-compose run lms python manage.py lms migrate wiki 0002_remove_article_subscription --fake --settings=devstack
+	docker-compose run lms python manage.py lms migrate --settings=devstack
+	docker-compose run lms python manage.py cms migrate --settings=devstack
 
 	docker-compose run lms mysql --host mysql --default-character-set=utf8 -u root -ppassword edxapp < build/edxapp/add_edxapp_users.sql
