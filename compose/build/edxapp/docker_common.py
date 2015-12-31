@@ -8,8 +8,8 @@ META_UNIVERSITIES = {}
 PIPELINE_ENABLED = False
 
 
-SESSION_COOKIE_DOMAIN = '.local.edx.org'
-CSRF_COOKIE_DOMAIN = '.local.edx.org'
+SESSION_COOKIE_DOMAIN = '.jazzar-android-box.edraakbeta.org'
+CSRF_COOKIE_DOMAIN = '.jazzar-android-box.edraakbeta.org'
 
 DATABASES = {
     'default': {
