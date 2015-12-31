@@ -3,7 +3,7 @@ all: build
 	echo Now you can run the stack using $ docker-compose up
 
 
-build: build_syslog build_images copy_platform_code db_initialize_mysql
+build: build_syslog build_images copy_platform_code db_reset_mysql
 	# Build the images.
 	echo Done buidling images and database
 
@@ -55,7 +55,7 @@ quick_edxapp_restart:
 	touch ../edx-platform/lms/urls.py ../edx-platform/cms/urls.py
 
 
-db_initialize_mysql:
+db_reset_mysql:
 	# Build the database from scratch: create database and migrate it.
 
 	# Waiting mysql to launch (Quit using Ctrl-C this if it takes more than 1 minute)...
@@ -74,9 +74,9 @@ db_initialize_mysql:
 
 	# Splitting this into three steps to avoid a bug in `0002_remove_article_subscription`
 	# Migrating...
-	docker-compose run lms python manage.py lms migrate wiki 0001_initial --settings=docker
-	docker-compose run lms python manage.py lms migrate wiki 0002_remove_article_subscription --fake --settings=docker
-	docker-compose run lms python manage.py lms migrate --settings=docker
-	docker-compose run lms python manage.py cms migrate --settings=docker
+	docker-compose run lms python manage.py lms migrate wiki 0001_initial --settings=devstack
+	docker-compose run lms python manage.py lms migrate wiki 0002_remove_article_subscription --fake --settings=devstack
+	docker-compose run lms python manage.py lms migrate --settings=devstack
+	docker-compose run lms python manage.py cms migrate --settings=devstack
 
 	docker-compose run lms mysql --host mysql --default-character-set=utf8 -u root -ppassword edxapp < build/edxapp/add_edxapp_users.sql
