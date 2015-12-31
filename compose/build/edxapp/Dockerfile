@@ -4,7 +4,7 @@ MAINTAINER Omar Al-Ithawi <i@omardo.com>
 
 # The latest from edx/master that worked with me
 # change it to the commit you'd like
-ENV EDX_VERSION 7a858b6e09afd96e68939e4074825d1459144a2e
+ENV EDX_VERSION release-2015-12-16
 
 # Use: git references to speed up clone
 ENV EDX_REPO https://github.com/edx/edx-platform.git
