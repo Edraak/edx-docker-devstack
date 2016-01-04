@@ -21,7 +21,8 @@ mongo:
 
 lms:
   container_name: edx_lms
-  build: build/edxapp
+  image: edraak/edx/edxapp:jan-6th-2016
+  # build: build/edxapp
   working_dir: /edx/app/edxapp/edx-platform
   environment:
     EDXAPP_TEST_MONGO_HOST: "mongo"
@@ -34,7 +35,7 @@ lms:
     - "syslog:rw"
 
   volumes:
-    - "../edx-platform/:/edx/app/edxapp/edx-platform-devcode"
+    - "../edx-platform:/edx/app/edxapp/edx-platform-devcode"
     - "../envs-edx:/edx/app/edxapp/devenvs"
 
     - "/edx/app/edxapp/staticfiles"
@@ -52,7 +53,7 @@ lms:
 
 studio:
   container_name: edx_studio
-  build: build/edxapp
+  image: edraak/edx/edxapp:jan-6th-2016
   working_dir: /edx/app/edxapp/edx-platform
   environment:
     EDXAPP_TEST_MONGO_HOST: "mongo"
@@ -84,7 +85,7 @@ data:
 
 nginx:
   container_name: edx_nginx
-  build: build/nginx
+  image: edraak/edx/nginx:jan-6th-2016
   ports:
     - "80:80"
   links:
@@ -95,7 +96,7 @@ nginx:
 # Provide a syslog just to make the devstack running!
 syslog:
   container_name: edx_syslog
-  image: edx-devstack-syslog
+  image: edraak/edx/syslog:jan-6th-2016
   volumes:
     - "/dev/"
     - "/var/log"

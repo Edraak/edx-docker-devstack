@@ -7,6 +7,8 @@ copy_content() {
   find . -maxdepth 1 -mindepth 1 -exec cp -r {} $TO/{} \;
 }
 
+cd /
+
 copy_content  \
     /edx/app/edxapp/edx-platform-buildcode  \
     /edx/app/edxapp/edx-platform
