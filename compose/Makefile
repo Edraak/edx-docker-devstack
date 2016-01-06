@@ -3,19 +3,15 @@ all: build
 	echo Now you can run the stack using $ docker-compose up
 
 
-build: build_syslog build_images copy_platform_code db_reset_mysql
+build: build_images copy_platform_code db_reset_mysql
 	# Build the images.
 	echo Done buidling images and database
-
-build_syslog:
-	docker build -t edx-devstack-syslog https://github.com/Edraak/syslogdocker.git
-
 
 copy_platform_code:
 	bash ensure_empty_dir.sh ../edx-platform/
 	bash ensure_empty_dir.sh ../envs-edx/
 
-	docker-compose run --no-deps lms bash /edx/app/edxapp/copy_code.sh
+	cat build/edxapp/copy_code.sh | docker-compose run --no-deps lms bash
 
 	sudo chown -R $$USER:$$USER ../edx-platform ../envs-edx
 
@@ -48,7 +44,9 @@ danger_remove_everything: danger_remove_code danger_kill_and_remove_volumes
 build_images:
 	# Rebuild the lms image and other images if requried.
 	# This step will take some time to build the image...
-	docker-compose build
+	docker build -t edraak/edx/syslog:jan-6th-2016 https://github.com/Edraak/syslogdocker.git
+	cd build/nginx && docker build -t edraak/edx/nginx:jan-6th-2016 .
+	cd build/edxapp && docker build -t edraak/edx/edxapp:jan-6th-2016 .
 
 
 quick_edxapp_restart:
